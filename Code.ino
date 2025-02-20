@@ -3,7 +3,7 @@
 
 // Define pin numbers for switches and LEDs
 const int switchPins[] = {2, 3, 4, 5}; // Switches connected to pins 10, 9, 8, 7
-const int ledPins[] = {7, 8, 9, 10};   // LEDs connected to pins 5, 4, 3, 2
+const int ledPins[] = {7, 8, 9, 10};   // LEDs connected to pins 5, 4, 3, 2   
 
 
 // Array to track the state of each switch
