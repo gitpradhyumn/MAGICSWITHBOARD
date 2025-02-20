@@ -1,16 +1,14 @@
-// Include necessary libraries
 #include <Arduino.h>
 
-// Define pin numbers for switches and LEDs
-const int switchPins[] = {2, 3, 4, 5}; // Switches connected to pins 10, 9, 8, 7
-const int ledPins[] = {7, 8, 9, 10};   // LEDs connected to pins 5, 4, 3, 2
+// Define pin numbers for switches and LEDs 
+const int switchPins[] = {10, 9, 8, 7}; // Switches connected to pins 10, 9, 8, 7
+const int ledPins[] = {5, 4, 3, 2}; // LEDs connected to pins 5, 4, 3, 2
 
-
-// Array to track the state of each switch
+// Array to track the state of each switch 
 bool switchState[4] = {false, false, false, false};
-// Array to track which LED is currently assigned to a switch
+// Array to track which LED is currently assigned to a switch 
 int ledAssignment[4] = {-1, -1, -1, -1};
-// Flag to indicate if initial startup behavior is complete
+// Flag to indicate if initial startup behavior is complete 
 bool startupComplete = false;
 
 void setup() {
@@ -49,31 +47,31 @@ void loop() {
 }
 
 bool checkStartup() {
-    static bool allSwitchesProcessed[4] = {false, false, false, false};
+    static bool allSwitchesOn[4] = {false, false, false, false};
 
     for (int i = 0; i < 4; i++) {
         bool currentState = !digitalRead(switchPins[i]);
 
-        if (currentState && !allSwitchesProcessed[i]) {
+        if (currentState && !allSwitchesOn[i]) {
             // Turn on LED corresponding to switch index
             digitalWrite(ledPins[i], HIGH);
-            allSwitchesProcessed[i] = true;
-        } else if (!currentState && allSwitchesProcessed[i]) {
-            // Turn off LED corresponding to switch index
-            digitalWrite(ledPins[i], LOW);
-            allSwitchesProcessed[i] = false;
+            allSwitchesOn[i] = true;
         }
     }
 
-    // Check if all switches have been toggled ON and OFF at least once
-    bool allProcessed = true;
+    // Check if all switches have been toggled ON at least once
     for (int i = 0; i < 4; i++) {
-        if (!allSwitchesProcessed[i]) {
-            allProcessed = false;
+        if (!allSwitchesOn[i]) {
+            return false;
         }
     }
 
-    return allProcessed;
+    // Turn off all LEDs after initial startup
+    for (int i = 0; i < 4; i++) {
+        digitalWrite(ledPins[i], LOW);
+    }
+
+    return true;
 }
 
 void assignLED(int switchIndex) {
